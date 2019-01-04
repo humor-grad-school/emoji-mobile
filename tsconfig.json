@@ -9,10 +9,12 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
+    "noImplicitAny": false,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "node"
     ],
     "paths": {
       "@/*": [
