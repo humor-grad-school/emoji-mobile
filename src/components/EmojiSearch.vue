@@ -14,10 +14,7 @@
       </svg>
     </div>
 
-    <input type="text" placeholder="search">
-    <!-- <label>
-
-    </label>-->
+    <input type="text" placeholder="search" v-model="text">
     <button class="cancel-button">취소</button>
   </div>
 </template>

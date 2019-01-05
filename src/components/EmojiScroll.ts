@@ -46,6 +46,7 @@ export default class EmojiScroll extends Vue {
 
   updated() {
     this.updateCssValues();
+    console.log(this.emojiData);
   }
 
   updateCssValues() {

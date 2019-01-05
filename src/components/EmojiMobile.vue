@@ -1,7 +1,11 @@
 <template>
   <div class='emoji-mobile'>
     <div ref="header" class='header'>
-      <EmojiSearch :categories="categories" :emojiData="emojiData" />
+      <EmojiSearch
+        :categories="categories"
+        :emojiData="emojiData"
+        @onSearchTextChanged="onSearchTextChanged"
+      />
       <EmojiAnchor :categories="categories" :emojiData="emojiData" />
     </div>
     <div
@@ -14,7 +18,7 @@
     >
       <EmojiScroll
         :categories="categories"
-        :emojiData="emojiData"
+        :emojiData="isSearching ? searchedEmojiData : emojiData"
         :scrollTop="contentScrollTop"
         @onEmojiClicked="onEmojiClicked"
       />
@@ -34,6 +38,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  width: 100vw;
 }
 .emoji-mobile {
   width: 100%;
