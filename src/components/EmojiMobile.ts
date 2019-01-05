@@ -33,9 +33,20 @@ export interface EmojiData {
 export default class EmojiMobile extends Vue {
   readonly categories = categories;
   readonly emojiData = emojiData as EmojiData;
+  $refs!: {
+    content: HTMLDivElement;
+  };
+  contentScrollTop: number = 0;
   mounted() {
     this.addRecent();
     this.addCustom();
+    this.$refs.content.scroll(0, 1);
+    this.$refs.content.onscroll = () => {
+      this.contentScrollTop = this.$refs.content.scrollTop;
+      if (this.$refs.content.scrollTop === 0) {
+        this.$refs.content.scroll(0, 1);
+      }
+    };
   }
 
   addRecent() {

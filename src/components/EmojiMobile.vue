@@ -1,8 +1,16 @@
 <template>
   <div class='emoji-mobile'>
-    <EmojiSearch :categories="categories" :emojiData="emojiData" />
-    <EmojiAnchor :categories="categories" :emojiData="emojiData" />
-    <EmojiScroll :categories="categories" :emojiData="emojiData" />
+    <div class='header'>
+      <EmojiSearch :categories="categories" :emojiData="emojiData" />
+      <EmojiAnchor :categories="categories" :emojiData="emojiData" />
+    </div>
+    <div ref="content" class='content'>
+      <EmojiScroll
+        :categories="categories"
+        :emojiData="emojiData"
+        :scrollTop="contentScrollTop"
+      />
+    </div>
   </div>
 </template>
 
@@ -10,28 +18,28 @@
 </script>
 
 <style scoped>
-  .emoji-mobile {
-    width: 100%;
-    height: 100vh;
+.header {
+  position: fixed;
+  width: 100%;
+}
+.content {
+  margin-top: 86px;
+  height: calc(100vh - 86px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.emoji-mobile {
+  width: 100%;
+  height: 100vh;
 
-    display: flex;
-    flex-direction: column;
-
-    justify-content: flex-start; /* align items in Main Axis */
-    align-items: stretch; /* align items in Cross Axis */
-    align-content: stretch; /* Extra space in Cross Axis */
-
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    /* border: 1px solid red; */
-
-    overflow: hidden;
-  }
+  overflow: hidden;
+}
 </style>
 
 <style>
   body {
     margin: 0;
+    position: fixed;
   }
 </style>
