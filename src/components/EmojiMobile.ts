@@ -32,7 +32,19 @@ export interface EmojiData {
 })
 export default class EmojiMobile extends Vue {
   readonly categories = categories;
-  readonly emojiData = emojiData as EmojiData;
+  readonly emojiData = {
+    ...emojiData,
+    // categories: emojiData.categories.filter(cate => cate.id === 'people'),
+    // categories: [
+    //   {
+    //     "id": "people",
+    //     "name": "Smileys & People",
+    //     "emojis": [
+    //       "grinning",
+    //     ]
+    //   }
+    // ],
+  } as EmojiData;
   searchedEmojiData = emojiData;
   isSearching = false;
   $refs!: {
@@ -81,13 +93,13 @@ export default class EmojiMobile extends Vue {
   onSearchTextChanged(text: string) {
     console.log('onSearchTextChanged', text);
     this.isSearching = text.length > 0;
-    console.log(this.isSearching);
     if (!this.isSearching) {
       return;
     }
+
     const foundEmojis = Object.keys(emojiData.emojis).filter((emojiId) => {
       return emojiId.indexOf(text) >= 0;
-    });
+    }).sort((a, b) => (a.indexOf(text) - b.indexOf(text)));
     this.searchedEmojiData = {
       ...emojiData,
       categories: [{
