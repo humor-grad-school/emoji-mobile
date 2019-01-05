@@ -2,7 +2,7 @@
   <div ref="container" class='container'>
     <div
       v-for="(category, index) of emojiData.categories"
-      :key="`category-${category.id}`"
+      :key="`emoji-scroll-category-${category.id}`"
       class='category'
     >
       <div
@@ -29,12 +29,15 @@
           : '0px'
         }"
       >
-        <span
-          class='emoji'
+        <button
+          class='emoji-button'
           v-for="emoji of category.emojis"
           :key="emoji"
-          v-html="getImageUrl(unifiedToNative(emojiData.emojis[emoji].b)[0])"
-        ></span>
+          @click="onEmojiClicked(emoji)"
+          :data="emoji"
+        >
+          <component :is="getEmojiComponentFromEmojiId(emoji, emojiData)"></component>
+        </button>
       </div>
     </div>
   </div>
@@ -59,8 +62,23 @@
 .category {
 
 }
-span.emoji {
+.emoji-button {
   padding: 6px;
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+.emoji-button:active {
+  position:relative;
+  top:1px;
+}
+.emoji-button > * {
+  height: 36px;
+  width: 36px;
+  font-size: 36px;
+  display: inline-block;
+  font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Apple Color Emoji";
 }
 .sticky {
   position: fixed;
@@ -72,11 +90,5 @@ span.emoji {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-}
-</style>
-<style>
-img.emoji {
-  height: 36px;
-  width: 36px;
 }
 </style>

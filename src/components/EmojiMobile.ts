@@ -73,4 +73,7 @@ export default class EmojiMobile extends Vue {
       name: 'Custom',
     });
   }
+  onEmojiClicked(emoji: string) {
+    console.log(emoji);
+  }
 }

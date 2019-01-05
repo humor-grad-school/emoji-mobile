@@ -1,6 +1,6 @@
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch, Emit } from 'vue-property-decorator';
 import { EmojiData } from './EmojiMobile';
-import twemoji from 'twemoji';
+import { getEmojiComponentFromEmojiId } from '@/utils/getEmojiImageComponent';
 
 @Component({
   components: {
@@ -22,6 +22,7 @@ export default class EmojiScroll extends Vue {
   };
   emojisMarginTop: number = 0;
   stickyTop: number = 0;
+  getEmojiComponentFromEmojiId = getEmojiComponentFromEmojiId;
 
   @Watch('scrollTop')
   onScrollTopChanged(scrollTop: number, prevScrollTop: number) {
@@ -60,24 +61,7 @@ export default class EmojiScroll extends Vue {
     }
   }
 
-  unifiedToNative(unified: string): string[] {
-    const unicodes = unified.split('-');
-    const codePoints = unicodes.map((u) => parseInt(`0x${u}`, 16));
-
-    return codePoints.map((codePoint) => {
-      return String.fromCodePoint(codePoint);
-    });
-  }
-
-  getImageUrl(codePoint: string) {
-    return twemoji.parse(codePoint,   {
-      // callback: () => {
-
-      // },   // default the common replacer
-      attributes: () => {
-        return {};
-      }, // default returns {}
-      base: 'https://emoji.humorgrad.com/',
-    });
+  onEmojiClicked(emoji: string) {
+    this.$emit('onEmojiClicked', emoji);
   }
 }

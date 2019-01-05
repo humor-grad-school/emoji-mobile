@@ -16,6 +16,7 @@
         :categories="categories"
         :emojiData="emojiData"
         :scrollTop="contentScrollTop"
+        @onEmojiClicked="onEmojiClicked"
       />
     </div>
   </div>

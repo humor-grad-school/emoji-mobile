@@ -58,7 +58,7 @@
   font-weight: bold;
   color: #3BB9FF;
   border: 0px;
-  background: white;
+  background: transparent;
   font-size: 16px;
 }
 </style>
