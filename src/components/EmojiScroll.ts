@@ -1,9 +1,11 @@
 import { Component, Vue, Prop, Watch, Emit } from 'vue-property-decorator';
 import { EmojiData } from './EmojiMobile';
-import { getEmojiComponentFromEmojiId } from '@/utils/getEmojiImageComponent';
+import EmojiButton from './EmojiButton';
+import { getUnicodeEmoji } from '@/utils/getUnicodeEmoji';
 
 @Component({
   components: {
+    EmojiButton,
   },
 })
 export default class EmojiScroll extends Vue {
@@ -22,7 +24,7 @@ export default class EmojiScroll extends Vue {
   };
   emojisMarginTop: number = 0;
   stickyTop: number = 0;
-  getEmojiComponentFromEmojiId = getEmojiComponentFromEmojiId;
+  getUnicodeEmoji = getUnicodeEmoji;
 
   @Watch('scrollTop')
   onScrollTopChanged(scrollTop: number, prevScrollTop: number) {
@@ -46,7 +48,6 @@ export default class EmojiScroll extends Vue {
 
   updated() {
     this.updateCssValues();
-    console.log(this.emojiData);
   }
 
   updateCssValues() {

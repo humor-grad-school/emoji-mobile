@@ -29,15 +29,12 @@
           : '0px'
         }"
       >
-        <button
-          class='emoji-button'
+        <EmojiButton
           v-for="emoji of category.emojis"
           :key="emoji"
           @click="onEmojiClicked(emoji)"
-          :data="emoji"
-        >
-          <component :is="getEmojiComponentFromEmojiId(emoji, emojiData)"></component>
-        </button>
+          :unicode="getUnicodeEmoji(emoji, emojiData)"
+        />
       </div>
     </div>
   </div>
