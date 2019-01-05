@@ -1,10 +1,17 @@
 <template>
   <div class='emoji-mobile'>
-    <div class='header'>
+    <div ref="header" class='header'>
       <EmojiSearch :categories="categories" :emojiData="emojiData" />
       <EmojiAnchor :categories="categories" :emojiData="emojiData" />
     </div>
-    <div ref="content" class='content'>
+    <div
+      ref="content"
+      class='content'
+      :style="{
+        'margin-top': `${headerHeight}px`,
+        height: `calc(100vh - ${headerHeight}px)`,
+      }"
+    >
       <EmojiScroll
         :categories="categories"
         :emojiData="emojiData"
@@ -23,8 +30,6 @@
   width: 100%;
 }
 .content {
-  margin-top: 86px;
-  height: calc(100vh - 86px);
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;

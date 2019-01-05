@@ -20,6 +20,8 @@ export default class EmojiScroll extends Vue {
     categoryNameContainerElements: HTMLDivElement[];
     container: HTMLDivElement;
   };
+  emojisMarginTop: number = 0;
+  stickyTop: number = 0;
 
   @Watch('scrollTop')
   onScrollTopChanged(scrollTop: number, prevScrollTop: number) {
@@ -35,18 +37,27 @@ export default class EmojiScroll extends Vue {
     if (this.currentCategoryIndex === -1) {
       this.currentCategoryIndex = 0;
     }
-
-    const offsetTops = this.$refs.emojisElements
-      .map((categoryNameElement) => {
-        return categoryNameElement.offsetTop;
-      });
-    console.log(this.currentCategoryIndex);
-    console.log(scrollTop, offsetTops);
-    console.log('');
   }
 
   mounted() {
+    this.updateCssValues();
+  }
+
+  updated() {
+    this.updateCssValues();
+  }
+
+  updateCssValues() {
     this.containerOffsetTop = this.$refs.container.offsetTop;
+    const currentCategoryElement = this.$refs.categoryNameContainerElements[this.currentCategoryIndex];
+    this.emojisMarginTop = currentCategoryElement
+      ? currentCategoryElement.clientHeight
+      : 0;
+
+    const containerParentElement = this.$refs.container.parentElement;
+    if (containerParentElement) {
+      this.stickyTop = containerParentElement.offsetTop;
+    }
   }
 
   unifiedToNative(unified: string): string[] {

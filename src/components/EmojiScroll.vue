@@ -10,7 +10,7 @@
         ref="categoryNameContainerElements"
         :class="{ sticky: currentCategoryIndex === index }"
         :style="{ top: currentCategoryIndex === index
-          ? `${containerOffsetTop}px`
+          ? `${stickyTop}px`
           : '0px',
         }"
       >
@@ -24,8 +24,8 @@
       <div
         class='emojis'
         ref="emojisElements"
-        :style="{ 'margin-top': currentCategoryIndex === index && $refs.categoryNameContainerElements
-          ? `${$refs.categoryNameContainerElements[index].clientHeight}px`
+        :style="{ 'margin-top': currentCategoryIndex === index
+          ? `${emojisMarginTop}px`
           : '0px'
         }"
       >

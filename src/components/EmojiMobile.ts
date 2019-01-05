@@ -35,11 +35,14 @@ export default class EmojiMobile extends Vue {
   readonly emojiData = emojiData as EmojiData;
   $refs!: {
     content: HTMLDivElement;
+    header: HTMLDivElement;
   };
   contentScrollTop: number = 0;
+  headerHeight: number = 0;
   mounted() {
     this.addRecent();
     this.addCustom();
+
     this.$refs.content.scroll(0, 1);
     this.$refs.content.onscroll = () => {
       this.contentScrollTop = this.$refs.content.scrollTop;
@@ -47,6 +50,12 @@ export default class EmojiMobile extends Vue {
         this.$refs.content.scroll(0, 1);
       }
     };
+
+    this.headerHeight = this.$refs.header.clientHeight;
+  }
+
+  updated() {
+    this.headerHeight = this.$refs.header.clientHeight;
   }
 
   addRecent() {
