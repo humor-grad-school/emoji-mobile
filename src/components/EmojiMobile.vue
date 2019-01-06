@@ -2,11 +2,10 @@
   <div class='emoji-mobile'>
     <div ref="header" class='header'>
       <EmojiSearch
-        :categories="categories"
         :emojiData="emojiData"
         @onSearchTextChanged="onSearchTextChanged"
       />
-      <EmojiAnchor :categories="categories" :emojiData="emojiData" />
+      <EmojiAnchor :emojiData="emojiData" />
     </div>
     <div
       ref="content"
@@ -17,7 +16,6 @@
       }"
     >
       <EmojiScroll
-        :categories="categories"
         :emojiData="isSearching ? searchedEmojiData : emojiData"
         :scrollTop="contentScrollTop"
         @onEmojiClicked="onEmojiClicked"

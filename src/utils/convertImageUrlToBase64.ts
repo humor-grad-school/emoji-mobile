@@ -1,6 +1,9 @@
+import { convertDataURItoBlob } from './convertDataURItoBlob';
+
 const promises = {};
 
-function convertBlobToBase64(blob: Blob): Promise<string> {
+let sum = 0;
+function convertBlobToDataUrl(blob: Blob): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = reject;
@@ -11,36 +14,71 @@ function convertBlobToBase64(blob: Blob): Promise<string> {
   });
 }
 
-export async function convertImageUrlToBase64(url: string): Promise<string> {
-  const key = `emoji-image-${url}`;
+function getLocalStorageKey(url: string): string {
+  return `data-url-cache-of-url-${url}`;
+}
 
+const objectUrlCache: {[url: string]: string} = {}
+
+export function convertHttpUrlToObjectUrlFromLocalCache(url: string): string | null {
+  if (objectUrlCache[url]) {
+    return objectUrlCache[url];
+  }
+
+  const localStorageKey = getLocalStorageKey(url);
+
+  const cachedDataUrl = localStorage.getItem(localStorageKey);
+  // return cachedDataUrl;
+  return null;
+
+  // if (cachedDataUrl) {
+  //   const blob = convertDataURItoBlob(cachedDataUrl);
+  //   const objectUrl = URL.createObjectURL(blob);
+  //   // const now = performance.now();
+  //   // const end = performance.now();
+  //   // sum += end - now;
+  //   // console.log(sum, end - now);
+
+  //   objectUrlCache[url] = objectUrl;
+  //   promises[url] = objectUrl;
+
+  //   return objectUrl;
+  // }
+}
+
+export async function convertHttpUrlToObjectUrl(url: string): Promise<string> {
   const cachedPromise = promises[url];
   if (cachedPromise) {
-    // console.log('cached in promises');
-    return await cachedPromise;
+    return cachedPromise;
   }
-  // console.log('not cached in promises');
 
-  const cachedFromLocalStrage = localStorage.getItem(key);
-  if (cachedFromLocalStrage) {
-    // console.log('cached in local storage');
-    promises[url] = cachedFromLocalStrage;
-    return cachedFromLocalStrage;
+  const cachedInLocal = convertHttpUrlToObjectUrlFromLocalCache(url);
+  if (cachedInLocal) {
+    console.log('cached in local');
+    promises[url] = cachedInLocal;
+    return cachedInLocal;
   }
-  // console.log('not cached in local storage');
+  // console.log('not cached in local');
 
-  const newPromise = promises[url] = new Promise<string>(async (resolve, reject) => {
+  promises[url] = new Promise<string>(async (resolve, reject) => {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
-      const base64 = await convertBlobToBase64(blob);
 
-      localStorage.setItem(key, base64);
-      return resolve(base64);
+      const objectUrl = URL.createObjectURL(blob);
+
+      objectUrlCache[url] = objectUrl;
+      promises[url] = objectUrl;
+
+      resolve(objectUrl);
+
+      const dataUrl = await convertBlobToDataUrl(blob);
+      const localStorageKey = getLocalStorageKey(url);
+      localStorage.setItem(localStorageKey, dataUrl);
     } catch (err) {
       reject(err);
     }
   });
 
-  return await newPromise;
+  return promises[url];
 }

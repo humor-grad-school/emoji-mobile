@@ -4,23 +4,21 @@ import EmojiScroll from './EmojiScroll.vue';
 import EmojiSearch from './EmojiSearch.vue';
 /* tslint:disable-next-line */
 import emojiData from '../emojiData.json';
-import { categories } from '@/data/categories';
+
+export interface CategoryData {
+  emojis: Emoji[];
+  id: string;
+  name: string;
+}
+
+export interface Emoji {
+  id: string;
+  unicode: string;
+  url: string;
+}
 
 export interface EmojiData {
-  categories: Array<{
-    emojis: string[],
-    id: string,
-    name: string,
-  }>;
-  emojis: {
-    [id: string]: {
-      a: string; // description
-      b: string; // code
-      j?: string[]; // keywords
-    },
-  };
-  compressed: boolean;
-  aliases: { [id: string]: string };
+  categories: CategoryData[];
 }
 
 @Component({
@@ -31,17 +29,20 @@ export interface EmojiData {
   },
 })
 export default class EmojiMobile extends Vue {
-  readonly categories = categories;
   readonly emojiData = {
     ...emojiData,
-    // categories: emojiData.categories.filter(cate => cate.id === 'people'),
+    categories: emojiData.categories.filter(cate => cate.id === 'people'),
     // categories: [
     //   {
     //     "id": "people",
     //     "name": "Smileys & People",
     //     "emojis": [
-    //       "grinning",
-    //     ]
+    //       {
+    //         "id": "grinning",
+    //         "unicode": "😀",
+    //         "url": "https://emoji.humorgrad.com/72x72/1f600.png"
+    //       },
+    //     ],
     //   }
     // ],
   } as EmojiData;
@@ -53,6 +54,8 @@ export default class EmojiMobile extends Vue {
   };
   contentScrollTop: number = 0;
   headerHeight: number = 0;
+  prev = performance.now();
+
   mounted() {
     this.addRecent();
     this.addCustom();
@@ -70,6 +73,10 @@ export default class EmojiMobile extends Vue {
 
   updated() {
     this.headerHeight = this.$refs.header.clientHeight;
+
+    const now = performance.now();
+    console.log(now - this.prev);
+    this.prev = now;
   }
 
   addRecent() {
@@ -97,9 +104,9 @@ export default class EmojiMobile extends Vue {
       return;
     }
 
-    const foundEmojis = Object.keys(emojiData.emojis).filter((emojiId) => {
-      return emojiId.indexOf(text) >= 0;
-    }).sort((a, b) => (a.indexOf(text) - b.indexOf(text)));
+    const foundEmojis = emojiData.categories.flatMap((category) => category.emojis).flat()
+    .filter((emoji) => emoji.id.indexOf(text) >= 0)
+    .sort((a, b) => a.id.indexOf(text) - a.id.indexOf(text));
     this.searchedEmojiData = {
       ...emojiData,
       categories: [{

@@ -29,12 +29,27 @@
           : '0px'
         }"
       >
-        <EmojiButton
-          v-for="emoji of category.emojis"
-          :key="emoji"
-          @click="onEmojiClicked(emoji)"
-          :unicode="getUnicodeEmoji(emoji, emojiData)"
-        />
+        <ThrottleList v-for="emoji of category.emojis">
+          <KeepAliveGlobal :key="`KeepAliveGlobal-${emoji.id}`">
+            <EmojiButton
+              :key="`EmojiButton-${emoji.id}`"
+              :emoji="emoji"
+              @click="onEmojiClicked(emoji)"
+              @onLoaded="onEmojiButtonLoaded(emoji)"
+            />
+          </KeepAliveGlobal>
+        </ThrottleList>
+
+        <!-- <template v-for="emoji of loadingCategoryEmojisMap[index]">
+          <KeepAliveGlobal :key="`KeepAliveGlobal-${emoji.id}`">
+            <EmojiButton
+              :key="`EmojiButton-${emoji.id}`"
+              :emoji="emoji"
+              @click="onEmojiClicked(emoji)"
+              @onLoaded="onEmojiButtonLoaded(emoji)"
+            />
+          </KeepAliveGlobal>
+        </template> -->
       </div>
     </div>
   </div>
