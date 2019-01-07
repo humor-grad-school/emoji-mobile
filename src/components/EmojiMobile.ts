@@ -15,6 +15,11 @@ export interface Emoji {
   id: string;
   unicode: string;
   url: string;
+  sprite: {
+    x: number;
+    y: number;
+    name: string;
+  };
 }
 
 export interface EmojiData {
@@ -31,7 +36,7 @@ export interface EmojiData {
 export default class EmojiMobile extends Vue {
   readonly emojiData = {
     ...emojiData,
-    categories: emojiData.categories.filter(cate => cate.id === 'people'),
+    // categories: emojiData.categories.filter(cate => cate.id === 'people'),
     // categories: [
     //   {
     //     "id": "people",
@@ -46,7 +51,7 @@ export default class EmojiMobile extends Vue {
     //   }
     // ],
   } as EmojiData;
-  searchedEmojiData = emojiData;
+  searchedEmojiData = this.emojiData;
   isSearching = false;
   $refs!: {
     content: HTMLDivElement;
@@ -103,12 +108,12 @@ export default class EmojiMobile extends Vue {
     if (!this.isSearching) {
       return;
     }
-
-    const foundEmojis = emojiData.categories.flatMap((category) => category.emojis).flat()
-    .filter((emoji) => emoji.id.indexOf(text) >= 0)
-    .sort((a, b) => a.id.indexOf(text) - a.id.indexOf(text));
+    const foundEmojis = this.emojiData.categories.flatMap((category) => category.emojis).flat()
+      .filter((emoji) => emoji.id.indexOf(text) >= 0)
+      .sort((a, b) => a.id.indexOf(text) - a.id.indexOf(text));
+    // console.log(JSON.stringify(foundEmojis, null, 2));
+    // console.log(foundEmojis.length);
     this.searchedEmojiData = {
-      ...emojiData,
       categories: [{
         emojis: foundEmojis,
         id: 'search',

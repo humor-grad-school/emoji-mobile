@@ -2,13 +2,12 @@ import { convertDataURItoBlob } from './convertDataURItoBlob';
 
 const promises = {};
 
-let sum = 0;
 function convertBlobToDataUrl(blob: Blob): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = reject;
     reader.onload = () => {
-        resolve(reader.result as string);
+      resolve(reader.result as string);
     };
     reader.readAsDataURL(blob);
   });
@@ -18,7 +17,7 @@ function getLocalStorageKey(url: string): string {
   return `data-url-cache-of-url-${url}`;
 }
 
-const objectUrlCache: {[url: string]: string} = {}
+const objectUrlCache: { [url: string]: string } = {}
 
 export function convertHttpUrlToObjectUrlFromLocalCache(url: string): string | null {
   if (objectUrlCache[url]) {
@@ -28,22 +27,17 @@ export function convertHttpUrlToObjectUrlFromLocalCache(url: string): string | n
   const localStorageKey = getLocalStorageKey(url);
 
   const cachedDataUrl = localStorage.getItem(localStorageKey);
-  // return cachedDataUrl;
-  return null;
 
-  // if (cachedDataUrl) {
-  //   const blob = convertDataURItoBlob(cachedDataUrl);
-  //   const objectUrl = URL.createObjectURL(blob);
-  //   // const now = performance.now();
-  //   // const end = performance.now();
-  //   // sum += end - now;
-  //   // console.log(sum, end - now);
+  if (!cachedDataUrl) {
+    return null;
+  }
+  const blob = convertDataURItoBlob(cachedDataUrl);
+  const objectUrl = URL.createObjectURL(blob);
 
-  //   objectUrlCache[url] = objectUrl;
-  //   promises[url] = objectUrl;
+  objectUrlCache[url] = objectUrl;
+  promises[url] = objectUrl;
 
-  //   return objectUrl;
-  // }
+  return objectUrl;
 }
 
 export async function convertHttpUrlToObjectUrl(url: string): Promise<string> {
@@ -54,11 +48,9 @@ export async function convertHttpUrlToObjectUrl(url: string): Promise<string> {
 
   const cachedInLocal = convertHttpUrlToObjectUrlFromLocalCache(url);
   if (cachedInLocal) {
-    console.log('cached in local');
     promises[url] = cachedInLocal;
     return cachedInLocal;
   }
-  // console.log('not cached in local');
 
   promises[url] = new Promise<string>(async (resolve, reject) => {
     try {
